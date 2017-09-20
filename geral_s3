@@ -1,0 +1,44 @@
+kid1 <- list(album <- logical(10),
+            collection <- numeric(10))
+
+kid2 <- list(album <- logical(10),
+             collection <- numeric(10))
+
+kid3 <- list(album <- logical(10),
+             collection <- numeric(10))
+
+class(kid1) <- "kid"
+class(kid2) <- "kid"
+class(kid3) <- "kid"
+
+kids <- list(kid1, kid2, kid3)
+class(kids) <- "kid"
+
+kid <- function(x, ...){
+  UseMethod("kid", x)
+}
+
+pack <- structure(rep(0, 2), class = "pack")
+
+kid.pack <- function(pack = pack, kid = kids, ...){
+  for(j in 1:length(kid)){
+    pack <- structure(sample(10, 2, rep = TRUE), class = "pack")
+    for(i in 1:length(pack)){
+      if(kid[[j]][[1]][pack[i]] == TRUE){
+        kid[[j]][[2]][pack[i]] <- kid[[j]][[2]][pack[i]] + 1
+      }
+      else{
+        kid[[j]][[1]][pack[i]] <- TRUE
+      }
+    }
+  }
+}
+
+kid(pack)
+
+
+kids
+
+album
+collection
+pack
