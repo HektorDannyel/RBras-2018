@@ -13,7 +13,7 @@ putcards <- function(x, ...){
 
 putcards.kids <- function(kids_p, cards_p){
   for(card in cards_p){
-    if(kids_p[[1]][[card]] == FALSE){
+    if(kids_p[[1]][card] == FALSE){
       kids_p[[1]][card] <- TRUE
     }
     else{
