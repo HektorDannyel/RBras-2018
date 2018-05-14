@@ -24,6 +24,27 @@ kid <- setClass(
   }
 )
 
+meet <- setClass(
+  "meet",
+  
+  slots = c(
+    order = "matrix"
+  ),
+  
+  prototype = list(
+    order = matrix(0, nrow = 2, ncol = choose(length(kids), 2))
+  ),
+  
+  validity = function(object){
+    if(!is.matrix(object@order)){
+      return("Object should be a matrix.")
+    }
+    else if(!dim(object@order)[2] == choose(length(kids), 2)){
+      return("All children must meet exactly once.")
+    }
+  }
+)
+
 bi <- setClass(
   "bi",
   
@@ -126,8 +147,128 @@ setMethod(
   f = "getcards",
   signature = "kid",
   definition = function(kids_g, what){
-    tryCatch(eval(parse(text = (paste0("kids_g@", what)))),
+    tryCatch(eval(parse(text = paste0("kids_g@", what))),
              error = function(e) print(paste0("'", what, "' is not a valid parameter.")))
   }
 )
 
+setGeneric(
+  name = "encounter",
+  def = function(kids_e){
+    standardGeneric("encounter")
+  }
+)
+
+setMethod(
+  f = "encounter",
+  signature = "kid",
+  definition = function(kids_e){
+    meet <- matrix(combn(1:length(kids_e), 2), nrow = 2)
+    if(dim(meet)[2] > 1){
+      meet <- meet[,sample(1:dim(meet)[2], dim(meet)[2], FALSE)]
+    }
+    return(meet)
+  }
+)
+
+setClass(
+  
+)
+
+setGeneric(
+  name = "stock",
+  def = function(k1, k2){
+    standardGeneric("stock")
+  }
+)
+
+setMethod(
+  f = "stock",
+  signature = "kid",
+  definition = function(k1, k2){
+    k1.stock <- getcards(k1, "stock")
+    k2.album <- which(getcards(k2, "album") == 0)
+    k1.stock <- which(k1.stock > 0)[which(which(k1.stock > 0) %in% k2.album)]
+    return(k1.stock)
+  }
+)
+
+setGeneric(
+  name = "swap",
+  def = function(kids_s, k1, k2, k1.stock, k2.stock){
+    standardGeneric("swap")
+  }
+)
+
+setMethod(
+  name = "swap",
+  signature = "kid",
+  definition = function(kids_s, k1, k2, k1.stock, k2.stock){
+    if(!length(k1.stock) == length(k2.stock)){
+      if(length(k1) < length(k2)){
+        k.least <- k1
+        k.most <- k2
+        k.least.stock <- k1.stock
+        k.most.stock <- k2.stock
+      }
+      else{
+        k.least <- k2
+        k.most <- k1
+        k.least.stock <- k2.stock
+        k.most.stock <- k1.stock
+      }
+      kids_s[[k.least]] <- removecards(kids_s[[k.least]], k.least.stock)
+      kids_s[[k.most]] <- putcards(kids_s[[k.most]], k.least.stock)
+      extra <- getcards(kids_s[[k.least]], "stock")
+      k.extra <- min(length(k.most.stock) - lenght(k.least.stock), sum(extra))
+      if(length(k.most.stock) > 1){
+        k.most.stock <- sample(k.most.stock, length(k.least.stock) + k.extra, FALSE)
+      }
+      ex <- k.extra
+      k.least.remove <- numeric(1)
+      while(ex > 0){
+        if(length(which(extra > 0)) > 1){
+          k.least.remove <- sample(which(extra > 0), 1)
+        }
+        else if(length(which(extra > 0)) == 1){
+          k.least.remove <- which(extra > 0)
+        }
+        kids_s[[k.least]] <- removecards(kids_s[[k.least]], k.least.remove)
+        kids_s[[k.most]] <- putcards(kids_s[[k.most]], k.least.remove)
+        extra[k.east.remove] <- extra[k.least.remove] - 1
+        ex <- ex - 1
+      }
+      kids_s[[k.least]] <- putcards(kids_s[[k.least]], k.most.stock)
+      kids_s[[k.most]] <- removecards(kids_s[[k.most]], k.most.stock)
+    }
+    else{
+      kids_s[[k1]] <- putcards(kids_s[[k1]], k2.stock)
+      kids_s[[k2]] <- putcards(kids_s[[k2]], k1.stock)
+      kids_s[[k1]] <- removecards(kids_s[[k1]], k1.stock)
+      kids_s[[k2]] <- removecards(kids_s[[k2]], k2.stock)
+    }
+    return(kids_s)
+  }
+)
+
+setGeneric(
+  name = "trade",
+  def = function(kids_bu){
+    standardGeneric("trade")
+  }
+)
+
+setMethod(
+  f = "trade",
+  signature = "uni",
+  definition = function(kids_bu){
+    if(length(kids_bu) > 1){
+      enc <- encounter(kids_bu){
+        
+        for(i in 1:dim(enc)[2]){
+          
+        }
+      }
+    }
+  }
+)
