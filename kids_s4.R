@@ -24,27 +24,6 @@ kid <- setClass(
   }
 )
 
-meet <- setClass(
-  "meet",
-  
-  slots = c(
-    order = "matrix"
-  ),
-  
-  prototype = list(
-    order = matrix(0, nrow = 2, ncol = choose(length(kids), 2))
-  ),
-  
-  validity = function(object){
-    if(!is.matrix(object@order)){
-      return("Object should be a matrix.")
-    }
-    else if(!dim(object@order)[2] == choose(length(kids), 2)){
-      return("All children must meet exactly once.")
-    }
-  }
-)
-
 bi <- setClass(
   "bi",
   
@@ -72,6 +51,27 @@ create_universe <- function(kids_total = 10, album_size = 100, kid_class = "bi")
   assign("kid_class", c("kids", kid_class), envir = .GlobalEnv)
   assign("album_size", album_size, envir = .GlobalEnv)
 }
+
+meet <- setClass(
+  "meet",
+  
+  slots = c(
+    order = "matrix"
+  ),
+  
+  prototype = list(
+    order = matrix(0, nrow = 2, ncol = length(kids))
+  ),
+  
+  validity = function(object){
+    if(!is.matrix(object@order)){
+      return("Object should be a matrix.")
+    }
+    else if(!dim(object@order)[2] == choose(length(kids), 2)){
+      return("All children must meet exactly once.")
+    }
+  }
+)
 
 setGeneric(
   name = "putcards",
@@ -161,18 +161,14 @@ setGeneric(
 
 setMethod(
   f = "encounter",
-  signature = "kid",
+  signature = "meet",
   definition = function(kids_e){
-    meet <- matrix(combn(1:length(kids_e), 2), nrow = 2)
-    if(dim(meet)[2] > 1){
-      meet <- meet[,sample(1:dim(meet)[2], dim(meet)[2], FALSE)]
-    }
-    return(meet)
+    enc <- meet()
+    enc@order <- combn(length(kids), 2)
+    enc_order <- sample(ncol(enc@order), replace = FALSE)
+    enc@order <- enc@order[,enc_order]
+    return(enc)
   }
-)
-
-setClass(
-  
 )
 
 setGeneric(
@@ -263,12 +259,19 @@ setMethod(
   signature = "uni",
   definition = function(kids_bu){
     if(length(kids_bu) > 1){
-      enc <- encounter(kids_bu){
+      enc <- encounter(meet())
+      for(i in 1:nrow(enc@order)){
+        k1 <- enc@order[1, i]
+        k2 <- enc@order[2, i]
+        k1.stock <- stock(kids_bu, k1, k2)
+        k2.stock <- stock(kids_bu, k2, k1)
         
-        for(i in 1:dim(enc)[2]){
-          
+        if(!length(k1.stock) == 0 & !length(k2.stock) == 0){
+          k <- min(length(k1.stock), length(k2.stock))
+          kids_bu <- swap.kids(kids_tb, k1, k2, k1.stock, k2.stock)
         }
       }
     }
   }
+  return(kids_bu)
 )
