@@ -185,7 +185,7 @@ trade.uni <- function(kids_tu){
       k2.extra <- getcards(kids_tu, k2, "stock")
     
       if((!length(k1.stock) == 0 | !length(k2.stock) == 0) & (length(k1.extra > 0) > 0 & length(k2.extra > 0) > 0)){
-        kids_tu <- swap(kids, k1, k2, k1.stock, k2.stock)
+        kids_tu <- swap(kids_tu, k1, k2, k1.stock, k2.stock)
       }
     }
   }  

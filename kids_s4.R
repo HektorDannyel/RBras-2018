@@ -256,7 +256,7 @@ setGeneric(
 
 setMethod(
   f = "trade",
-  signature = "uni",
+  signature = "bi",
   definition = function(kids_bu){
     if(length(kids_bu) > 1){
       enc <- encounter(meet())
@@ -275,3 +275,33 @@ setMethod(
   }
   return(kids_bu)
 )
+
+setMethod(
+  f = "trade",
+  signature = "uni",
+  definition = function(kids_bu){
+    if(length(kids_bu) > 1){
+      enc <- encounter(meet())
+      
+      for(i in 1:dim(enc@order)[2]){
+        k1 <- enc@order[1, i]
+        k2 <- enc@order[2, i]
+        k1.stock <- stock(kids_bu, k1, k2)
+        k2.stock <- stock(kids_bu, k2, k1)
+        
+        k1.extra <- getcards(kids_tu[[k1]], "stock")
+        k2.extra <- getcards(kids_tu[[k2]], "stock")
+        
+        if((!length(k1.stock) == 0 | !lenght(k2.stock) == 0) & (length(k1.extra > 0) > 0 & length(k2.extra > 0) > 0)){
+          kids_bu <- swap(kids_bu, k1, k2, k1.stock, k2.stock)
+        }
+      }
+    }
+    return(kids_bu)
+  }
+)
+
+
+
+
+
