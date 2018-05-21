@@ -1,16 +1,45 @@
+# Hello! Welcome to the S4 guide for R users.
+# 
+# Before you go through with this tutorial, I highly recommend you to at least get the basics on Object Oriented Programming (OOP) and S3. 
+# It's not mandatory to understand these concepts but it surely does help a lot. 
+# 
+# So far, I do not have available materials on OOP but there is a S3 guide in my GitHub repository, in the same place this file can be found. Feel free to explore
+# it as much as you want.
+# 
+# In this guide, we will be using a simulation to exemplify our work. The simulation is part of a project of Professor Walmes Zeviani, from the Universidade Federal
+# do Paraná, who oriented me through this project and suggested that I used his work here.
+# 
+# It involves two universes of children. In both universes, we have a given number of kids who are collecting cards for an album. What makes each universe so unique is
+# in how these children behave when trading. In one universe, we will have a unilateral environment, where when two kids meet to trade their cards with each other, at
+# least one of them must benefit from the trade. In the other universe, a bilateral environment will exist, where both kids must benefit from the trade. A quick
+# illustration: 
+# 
+# Unilateral environment: Kids k1 and k2 meet to trade. k1 has 3 cards that k2 needs, but k2 only has 2 cards that k1 wants. So, they trade the cards they want from
+# each other and k1 gives the third card to k2, who gives k1 a random card from its collection, if there is any extra.
+# 
+# Bilateral environment: Kids k1 and k2 meet to trade. k1 has 3 cards that k2 needs, but k2 only has 2 cards that k1 wants. Each one gives the other the two cards of
+# interest. No other cards are traded.
+# 
+# One last thing: any bugs that you find or any questions that you have may be addressed to my e-mail. I will answer you with maximum effort.
+# 
+# Without further ado, let's get started!
+
+
+# The first thing we need to set when working with OOP is the object classes we will be working with. 
+
 kid <- setClass(
-  "kid",
-  
+  Class = "kid",
+
   slots = c(
     album = "logical",
     collection = "numeric"
   ),
-  
+
   prototype = list(
     album = logical(10),
     collection = numeric(10)
   ),
-  
+
   validity = function(object){
     if(!is.logical(object@album)){
       return("kid@album is not logical.")
@@ -26,13 +55,13 @@ kid <- setClass(
 
 bi <- setClass(
   "bi",
-  
+
   contains = "kid"
 )
 
 uni <- setClass(
   "uni",
-  
+
   contains = "kid"
 )
 
@@ -54,15 +83,15 @@ create_universe <- function(kids_total = 10, album_size = 100, kid_class = "bi")
 
 meet <- setClass(
   "meet",
-  
+
   slots = c(
     order = "matrix"
   ),
-  
+
   prototype = list(
     order = matrix(0, nrow = 2, ncol = length(kids))
   ),
-  
+
   validity = function(object){
     if(!is.matrix(object@order)){
       return("Object should be a matrix.")
@@ -197,7 +226,7 @@ setGeneric(
 )
 
 setMethod(
-  name = "swap",
+  f = "swap",
   signature = "kid",
   definition = function(kids_s, k1, k2, k1.stock, k2.stock){
     if(!length(k1.stock) == length(k2.stock)){
@@ -265,15 +294,15 @@ setMethod(
         k2 <- enc@order[2, i]
         k1.stock <- stock(kids_bu, k1, k2)
         k2.stock <- stock(kids_bu, k2, k1)
-        
+
         if(!length(k1.stock) == 0 & !length(k2.stock) == 0){
           k <- min(length(k1.stock), length(k2.stock))
-          kids_bu <- swap.kids(kids_tb, k1, k2, k1.stock, k2.stock)
+          kids_bu <- swap.kids(kids_bu, k1, k2, k1.stock, k2.stock)
         }
       }
     }
+    return(kids_bu)
   }
-  return(kids_bu)
 )
 
 setMethod(
@@ -282,16 +311,16 @@ setMethod(
   definition = function(kids_bu){
     if(length(kids_bu) > 1){
       enc <- encounter(meet())
-      
+
       for(i in 1:dim(enc@order)[2]){
         k1 <- enc@order[1, i]
         k2 <- enc@order[2, i]
         k1.stock <- stock(kids_bu, k1, k2)
         k2.stock <- stock(kids_bu, k2, k1)
-        
+
         k1.extra <- getcards(kids_tu[[k1]], "stock")
         k2.extra <- getcards(kids_tu[[k2]], "stock")
-        
+
         if((!length(k1.stock) == 0 | !lenght(k2.stock) == 0) & (length(k1.extra > 0) > 0 & length(k2.extra > 0) > 0)){
           kids_bu <- swap(kids_bu, k1, k2, k1.stock, k2.stock)
         }
@@ -300,8 +329,3 @@ setMethod(
     return(kids_bu)
   }
 )
-
-
-
-
-
