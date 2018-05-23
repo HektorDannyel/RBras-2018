@@ -1,45 +1,52 @@
-########################################################################################################################################################################
-########################################################################################################################################################################
-## Hello! Welcome to my S4 example for R users.                                                                                                                       ##
-##                                                                                                                                                                    ##
-## Before you go through with this tutorial, I highly recommend you to at very least get the basics on Object Oriented Programming (OOP) and S3, and if possible the  ##
-## basics from S4. It's not mandatory to understand these concepts but it surely does help a lot, since this will not go through all the whats and ifs of S4.         ##
-##                                                                                                                                                                    ##
-## So far, I do not have available materials on OOP but there is a S3 example in my GitHub repository, in the same place this file can be found. Feel free to explore ##
-## it as much as you want.                                                                                                                                            ##
-##                                                                                                                                                                    ##
-## In this guide, we will be using a simulation to help illustrate our work. The simulation is part of a project of Professor Walmes Zeviani, from the Universidade   ##
-## Federal do Paraná (Federal University of Paraná), who oriented me through this project and suggested that I used his work here.                                    ##
-##                                                                                                                                                                    ##
-## It involves two universes of children. In both universes, we have a given number of kids who are collecting cards for an album. What makes each universe so unique ##
-## is how these children behave when trading. In one universe, we will have a unilateral environment, where when two of the kids meet to trade their cards with each  ##
-## other, at least one of them must benefit from the trade. In the other universe, a bilateral environment will exist, where both kids must benefit from the trade.   ##
-## A quick illustration:                                                                                                                                              ##
-##                                                                                                                                                                    ##
-## Kids k1 and k2 meet to trade. k1 has 3 cards that k2 needs, but k2 only has 2 cards that k1 wants.                                                                 ##
-##                                                                                                                                                                    ##
-## Unilateral environment: They trade the cards they want from each other and k1 gives the third card to k2, who gives k1 a random card from their collection,        ##
-## if there is any extra.                                                                                                                                             ##
-##                                                                                                                                                                    ##
-## Bilateral environment: Each one gives the other the two cards of interest. No other cards are traded.                                                              ##
-##                                                                                                                                                                    ##
-## There are a few more details about the simulation itself, which will be explained along the code. Whenever you see a comment hash followed by the '@' symbol,      ##
-## means ## the explanation regards the simulation, and not the code. -> #@                                                                                           ##
-##                                                                                                                                                                    ##
-## One last thing: any bugs that you find or any questions that you have may be addressed to my e-mail (hektor.brasil@gmail.com).                                     ##
-## I will answer you with maximum effort.                                                                                                                             ##
-##                                                                                                                                                                    ##
-########################################################################################################################################################################
-########################################################################################################################################################################
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+#- Hello! Welcome to my S4 example for R users.                                                                                                                       -#
+#-                                                                                                                                                                    -#
+#- Before you go through with this tutorial, I highly recommend you to at very least get the basics on Object Oriented Programming (OOP) and S3, and if possible the  -#
+#- basics from S4. It's not mandatory to understand these concepts but it surely does help a lot, since this will not go through all the whats and ifs of S4.         -#
+#-                                                                                                                                                                    -#
+#- So far, I do not have available materials on OOP but there is a S3 example in my GitHub repository, in the same place this file can be found. Feel free to explore -#
+#- it as much as you want.                                                                                                                                            -#
+#-                                                                                                                                                                    -#
+#- In this guide, we will be using a simulation to help illustrate our work. The simulation is part of a project of Professor Walmes Zeviani, from the Universidade   -#
+#- Federal do Paraná (Federal University of Paraná), who oriented me through this project and suggested that I used his work here.                                    -#
+#-                                                                                                                                                                    -#
+#- It involves two universes of children. In both universes, we have a given number of kids who are collecting cards for an album. What makes each universe so unique -#
+#- is how these children behave when trading. In one universe, we will have a unilateral environment, where when two of the kids meet to trade their cards with each  -#
+#- other, at least one of them must benefit from the trade. In the other universe, a bilateral environment will exist, where both kids must benefit from the trade.   -#
+#- A quick illustration:                                                                                                                                              -#
+#-                                                                                                                                                                    -#
+#- Kids k1 and k2 meet to trade. k1 has 3 cards that k2 needs, but k2 only has 2 cards that k1 wants.                                                                 -#
+#-                                                                                                                                                                    -#
+#- Unilateral environment: They trade the cards they want from each other and k1 gives the third card to k2, who gives k1 a random card from their collection,        -#
+#- if there is any extra.                                                                                                                                             -#
+#-                                                                                                                                                                    -#
+#- Bilateral environment: Each one gives the other the two cards of interest. No other cards are traded.                                                              -#
+#-                                                                                                                                                                    -#
+#- There are a few more details about the simulation itself, which will be explained along the code. Whenever you see a comment hash followed by the '@' symbol,      -#
+#- means ## the explanation regards the simulation, and not the code. -> #@                                                                                           -#
+#-                                                                                                                                                                    -#
+#- One last thing: any bugs that you find or any questions that you have may be addressed to my e-mail (hektor.brasil@gmail.com).                                     -#
+#- I will answer you with maximum effort.                                                                                                                             -#
+#-                                                                                                                                                                    -#
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
 # Without further ado, let's get started!
 
-############################################################################################################################
-# IMPORTANT!                                                                                                               #
-#                                                                                                                          #
-# In S3, values within objects are called using the 'dollar' symbol (object$value). S4 uses the 'at' symbol (object@value).#
-#                                                                                                                          #
-############################################################################################################################
+
+# Important! --------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------------------------#
+# IMPORTANT!                                                                                                                #
+#                                                                                                                           #
+# In S3, values within objects are called using the 'dollar' symbol (object$value). S4 uses the 'at' symbol (object@value). #
+#                                                                                                                           #
+#---------------------------------------------------------------------------------------------------------------------------#
+
+
+# Setting classes and objects ---------------------------------------------------------
+
 
 # The first thing we need to set when working with OOP is the object classes we will be working with. In S4, the example below shows how to set a class.
 
@@ -69,10 +76,16 @@ kid <- setClass(
   }
 )
 
+
 kid() # This is an object of class 'kid'.
 
+
+#---
+
+  
 # In S4, Inheritance is present in a much more elegant way than in S3. It determines that a newly created class will *inherit* all of the characteristics from the
 # previous class.
+
 
 bi <- setClass(
   "bi",
@@ -80,11 +93,17 @@ bi <- setClass(
   contains = "kid" # 'contains' is the argument used to define from which class the newly setted will inherit the characteristics.
 ) # 'bi' is the class that defines a *bilateral* behaviour.
 
+
+
 uni <- setClass(
   "uni",
 
   contains = "kid"
 ) # 'uni' is the class that defines a *unilateral* behaviour.
+
+
+#---
+
 
 # Although not explicitly necessary, create_universe will enhance our simulation by dinamically creating the universe in which we will be working.
 # It will create n kids with an album size of p and define the behaviour and gather them all in a list.
@@ -106,6 +125,9 @@ create_universe <- function(kids_total = 10, album_size = 100, kid_class = "bi")
   assign("kid_class", c("kids", kid_class), envir = .GlobalEnv) # Assigning the classes to a character vector
   assign("album_size", album_size, envir = .GlobalEnv) # Assigning the album size to a numeric vector
 }
+
+#---
+
 
 #@ Meet is an object that will define in which order the kids will meet, two at a time. Every kid at least tries to meet with another (they will not succeed if there
 #@ are no cards to be traded).
@@ -133,6 +155,10 @@ meet <- setClass(
   }
 )
 
+
+# Functions ---------------------------------------------------------------
+
+
 # Now that we defined our classes, it is time to put our functions to use.
 # When defining a function, the first thing to do is defining a generic function. It will understand the class of the objects we are using and will define the structure
 # for the methods.
@@ -145,7 +171,7 @@ setGeneric(
 )
 
 setMethod(
-  f = "putcards", # The generic function 
+  f = "putcards", # The generic function's name 
   signature = "kid", # The class of the objects this function will affect
   definition = function(kids_p, cards_p){ # The function itself!
     for(card in cards_p){
@@ -159,6 +185,10 @@ setMethod(
     return(kids_p)
   }
 )
+
+
+#---
+
 
 # The procedure is very standard. Try to understand how the 'removecards' function works on your own!
 
@@ -185,6 +215,10 @@ setMethod(
   }
 )
 
+
+#---
+
+
 setGeneric(
   name = "buycards",
   def = function(kids_b, total_cards = album_size, pack_size = 5){ # When defining a default value to a parameter in your function, always do it in the Generic!
@@ -192,15 +226,19 @@ setGeneric(
   }
 )
 
-setMethod(
-  f = "buycards",
+setMethod( 
+  f = "buycards", #@ The 'buycards' function will make each kid "go to the store" to "buy" a new pack of cards.
   signature = "kid",
   definition = function(kids_b, total_cards, pack_size){
-    pack <- sort(sample(total_cards, pack_size, TRUE)) #@ This function will make each kid "go to the store" to "buy" a new pack of cards.
+    pack <- sort(sample(total_cards, pack_size, TRUE)) 
     kids_b <- putcards(kids_b, pack)
     return(kids_b)
   }
 )
+
+
+#---
+
 
 setGeneric(
   name = "getcards",
@@ -209,14 +247,18 @@ setGeneric(
   }
 )
 
-setMethod(
-  f = "getcards",
+setMethod( 
+  f = "getcards", #@ The 'getcards' function will show a kid's collection or album, depends on what is asked...
   signature = "kid",
-  definition = function(kids_g, what){ #@ This will show a kid's collection or album, depends on what is asked...
+  definition = function(kids_g, what){ 
     tryCatch(eval(parse(text = paste0("kids_g@", what))),
-             error = function(e) print(paste0("'", what, "' is not a valid parameter."))) #@...and return an error function if the parameter does not exist.
+             error = function(e) print(paste0("'", what, "' is not a valid parameter."))) #@...and return an error function if the input parameter does not exist.
   }
 )
+
+
+#---
+
 
 # This next function does not work with the class 'kid'. Try to understand what kind of object it affects and how!
 
@@ -239,6 +281,10 @@ setMethod(
   }
 )
 
+
+#---
+
+
 setGeneric(
   name = "stock",
   def = function(k1, k2){
@@ -257,6 +303,10 @@ setMethod(
   }
 )
 
+
+#---
+
+
 setGeneric(
   name = "swap",
   def = function(kids_s, k1, k2, k1.stock, k2.stock){
@@ -268,10 +318,10 @@ setMethod(
   f = "swap", #@ The 'swap' function is the biggest one because it must understand how the trade must happen, depending on the behaviour and card availability.
   signature = "kid",
   definition = function(kids_s, k1, k2, k1.stock, k2.stock){
-    if(!length(k1.stock) == length(k2.stock)){ 
-      if(length(k1) < length(k2)){
-        k.least <- k1
-        k.most <- k2
+    if(!length(k1.stock) == length(k2.stock)){ #@ This condition understands that there are different amounts of cards of interest from each kid...
+      if(length(k1) < length(k2)){ #@... and which is the one with more cards of interest
+        k.least <- k1 #@ kid with least cards to give
+        k.most <- k2 #@ kid with most cards to give
         k.least.stock <- k1.stock
         k.most.stock <- k2.stock
       }
@@ -281,16 +331,16 @@ setMethod(
         k.least.stock <- k2.stock
         k.most.stock <- k1.stock
       }
-      kids_s[[k.least]] <- removecards(kids_s[[k.least]], k.least.stock)
-      kids_s[[k.most]] <- putcards(kids_s[[k.most]], k.least.stock)
-      extra <- getcards(kids_s[[k.least]], "stock")
-      k.extra <- min(length(k.most.stock) - lenght(k.least.stock), sum(extra))
+      kids_s[[k.least]] <- removecards(kids_s[[k.least]], k.least.stock) #@ This removes the cards k.least gives to k.most
+      kids_s[[k.most]] <- putcards(kids_s[[k.most]], k.least.stock) #@ This gives k.least's cards to k.most
+      extra <- getcards(kids_s[[k.least]], "stock") #@ This will store k.least's stock
+      k.extra <- min(length(k.most.stock) - lenght(k.least.stock), sum(extra)) #@ This will understand if k.least has enough cards in stock to return for what they want
       if(length(k.most.stock) > 1){
-        k.most.stock <- sample(k.most.stock, length(k.least.stock) + k.extra, FALSE)
+        k.most.stock <- sample(k.most.stock, length(k.least.stock) + k.extra, FALSE) #@ If k.least does not have enough cards, this step will remove excessive cards from k.most
       }
       ex <- k.extra
       k.least.remove <- numeric(1)
-      while(ex > 0){
+      while(ex > 0){ #This loop will remove cards from k.least's collection until enough has been given to k.most in exchange for their ones
         if(length(which(extra > 0)) > 1){
           k.least.remove <- sample(which(extra > 0), 1)
         }
@@ -302,10 +352,10 @@ setMethod(
         extra[k.east.remove] <- extra[k.least.remove] - 1
         ex <- ex - 1
       }
-      kids_s[[k.least]] <- putcards(kids_s[[k.least]], k.most.stock)
+      kids_s[[k.least]] <- putcards(kids_s[[k.least]], k.most.stock) #@ And finally, k.least will receive k.most's cards
       kids_s[[k.most]] <- removecards(kids_s[[k.most]], k.most.stock)
     }
-    else{
+    else{ #@ In this condition, k1 and k2 have the same amount of cards to trade
       kids_s[[k1]] <- putcards(kids_s[[k1]], k2.stock)
       kids_s[[k2]] <- putcards(kids_s[[k2]], k1.stock)
       kids_s[[k1]] <- removecards(kids_s[[k1]], k1.stock)
@@ -315,6 +365,10 @@ setMethod(
   }
 )
 
+
+#---
+
+
 setGeneric(
   name = "trade",
   def = function(kids_bu){
@@ -322,26 +376,26 @@ setGeneric(
   }
 )
 
-setMethod(
-  f = "trade",
-  signature = "bi",
+setMethod( 
+  f = "trade", #@ The 'trade' function will be the simulation's mechanism to generate the kids' encounters and trade between them
+  signature = "bi", #@ It works with the 'bi' class we created before
   definition = function(kids_bu){
     if(length(kids_bu) > 1){
-      enc <- encounter(meet())
+      enc <- encounter(meet()) #@ Using the 'encounter' function with a 'meet' object
       for(i in 1:nrow(enc@order)){
         k1 <- enc@order[1, i]
         k2 <- enc@order[2, i]
-        k1.stock <- stock(kids_bu, k1, k2)
-        k2.stock <- stock(kids_bu, k2, k1)
+        k1.stock <- stock(kids_bu, k1, k2) #@ Setting up
+        k2.stock <- stock(kids_bu, k2, k1) #@ the stock!
         
-        if(!length(k1.stock) == length(k2.stock)){
+        if(!length(k1.stock) == length(k2.stock)){ #@ Since this is the bilateral behaviour, there must always be equal trades
           k_min <- min(length(k1.stock), min(k2.stock))
           k1.stock <- sample(k1.stock, k_min, FALSE)
           k2.stock <- sample(k2.stock, k_min, FALSE)
         }
 
         if(!length(k1.stock) == 0 & !length(k2.stock) == 0){
-          kids_bu <- swap.kids(kids_bu, k1, k2, k1.stock, k2.stock)
+          kids_bu <- swap(kids_bu, k1, k2, k1.stock, k2.stock)
         }
       }
     }
@@ -349,9 +403,13 @@ setMethod(
   }
 )
 
+
+#---
+
+
 setMethod(
-  f = "trade",
-  signature = "uni",
+  f = "trade", #@ Wait a second! There is another 'trade' function. Is that a mistake from the developer?
+  signature = "uni", #@ Nope! This one affects the 'uni' behaviour. Try to figure for yourself the differences :)
   definition = function(kids_bu){
     if(length(kids_bu) > 1){
       enc <- encounter(meet())
