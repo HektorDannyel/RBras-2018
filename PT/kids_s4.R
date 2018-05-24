@@ -167,21 +167,21 @@ meet <- setClass(
 
 setGeneric(
   name = "putcards", # Todas as funcoes merecem um nome!
-  def = function(kids_p, cards_p){ # Here we define the structure our next functions will have. They *must* match the parameters.
+  def = function(kids_p, cards_p){ # Aqui nos definimos a estrutura que nossa proxima funcao tera. Os metodos *devem* ter os mesmos parametros!
     standardGeneric("putcards")
   }
 )
 
 setMethod(
-  f = "putcards", # The generic function's name 
-  signature = "kid", # The class of the objects this function will affect
-  definition = function(kids_p, cards_p){ # The function itself!
+  f = "putcards", # O nome da funcao generica   
+  signature = "kid", # A classe de objetos que a funcao afetara
+  definition = function(kids_p, cards_p){ # A funcao, propriamente dito!
     for(card in cards_p){
-      if(kids_p@album[card] == FALSE){ #@ If the card i is NOT in the album...
-        kids_p@album[card] <- TRUE #@ ...put it in the album!
+      if(kids_p@album[card] == FALSE){ #@ Se o card i NAO estiver no album...
+        kids_p@album[card] <- TRUE #@ ...coloque-o nele!
       }
-      else{ #@ If the card i IS in the album...
-        kids_p@collection[card] <- kids_p@collection[card] + 1 #@...put it with the others!
+      else{ #@ Se o card ESTIVER no album...
+        kids_p@collection[card] <- kids_p@collection[card] + 1 #@...coloque-o com os outros!
       }
     }
     return(kids_p)
@@ -192,7 +192,7 @@ setMethod(
 #---
 
 
-# The procedure is very standard. Try to understand how the 'removecards' function works on your own!
+# O procedimento e bem padrao. Tente entender como a funcao 'removecards' funciona sozinho!
 
 setGeneric(
   name = "removecards",
@@ -223,13 +223,13 @@ setMethod(
 
 setGeneric(
   name = "buycards",
-  def = function(kids_b, total_cards = album_size, pack_size = 5){ # When defining a default value to a parameter in your function, always do it in the Generic!
+  def = function(kids_b, total_cards = album_size, pack_size = 5){ # Ao definir um valor padrao para um parametro em sua funcao, sempre o faca na definicao da Generica!
     standardGeneric("buycards")
   }
 )
 
 setMethod( 
-  f = "buycards", #@ The 'buycards' function will make each kid "go to the store" to "buy" a new pack of cards.
+  f = "buycards", #@ A funcao 'buycards' ira fazer com que cada crianca "va ate uma banca" para "comprar" um pacote novo de cards
   signature = "kid",
   definition = function(kids_b, total_cards, pack_size){
     pack <- sort(sample(total_cards, pack_size, TRUE)) 
@@ -250,11 +250,11 @@ setGeneric(
 )
 
 setMethod( 
-  f = "getcards", #@ The 'getcards' function will show a kid's collection or album, depends on what is asked...
+  f = "getcards", #@ A funcao 'getcards' vai mostrar a colecao ou o album de alguma crianca, dependendo do que for pedido...
   signature = "kid",
   definition = function(kids_g, what){ 
     tryCatch(eval(parse(text = paste0("kids_g@", what))),
-             error = function(e) print(paste0("'", what, "' is not a valid parameter."))) #@...and return an error function if the input parameter does not exist.
+             error = function(e) print(paste0("'", what, "' is not a valid parameter."))) #@...e retornara uma mensagem de erro se o input do parametro nao existir.
   }
 )
 
@@ -262,7 +262,7 @@ setMethod(
 #---
 
 
-# This next function does not work with the class 'kid'. Try to understand what kind of object it affects and how!
+# Esta proxima funcao nao funciona com a classe 'kid'. Tente entender que tipo de objeto ela afeta sozinho!
 
 setGeneric(
   name = "encounter",
@@ -295,7 +295,7 @@ setGeneric(
 )
 
 setMethod(
-  f = "stock", #@ The 'stock' function will look into the cards each kid has available to trade and see if there are any matches with their interests.
+  f = "stock", #@ A funcao 'stock' vai examinar os cards disponiveis para troca de uma crianca e avaliar se a outra crianca precisa de alguma delas.
   signature = "kid",
   definition = function(k1, k2){
     k1.stock <- getcards(k1, "stock")
@@ -317,13 +317,13 @@ setGeneric(
 )
 
 setMethod(
-  f = "swap", #@ The 'swap' function is the biggest one because it must understand how the trade must happen, depending on the behaviour and card availability.
+  f = "swap", #@ A funcao 'swap' e a maior de todas pois ela deve entender como a troca deve acontecer, dependendo do comportamento e disponibilidade de cards.
   signature = "kid",
   definition = function(kids_s, k1, k2, k1.stock, k2.stock){
-    if(!length(k1.stock) == length(k2.stock)){ #@ This condition understands that there are different amounts of cards of interest from each kid...
-      if(length(k1) < length(k2)){ #@... and which is the one with more cards of interest
-        k.least <- k1 #@ kid with least cards to give
-        k.most <- k2 #@ kid with most cards to give
+    if(!length(k1.stock) == length(k2.stock)){ #@ Esta condicao compreende que ha diferentes quantidades de cards de interesse para cada crianca...
+      if(length(k1) < length(k2)){ #@... e qual das duas possui mais cards de interesse.
+        k.least <- k1 #@ crianca com menos cards para troca
+        k.most <- k2 #@ crianca com mais cards para troca
         k.least.stock <- k1.stock
         k.most.stock <- k2.stock
       }
@@ -333,16 +333,16 @@ setMethod(
         k.least.stock <- k2.stock
         k.most.stock <- k1.stock
       }
-      kids_s[[k.least]] <- removecards(kids_s[[k.least]], k.least.stock) #@ This removes the cards k.least gives to k.most
-      kids_s[[k.most]] <- putcards(kids_s[[k.most]], k.least.stock) #@ This gives k.least's cards to k.most
-      extra <- getcards(kids_s[[k.least]], "stock") #@ This will store k.least's stock
-      k.extra <- min(length(k.most.stock) - lenght(k.least.stock), sum(extra)) #@ This will understand if k.least has enough cards in stock to return for what they want
+      kids_s[[k.least]] <- removecards(kids_s[[k.least]], k.least.stock) #@ Isto remove os cards que k.least da para k.most
+      kids_s[[k.most]] <- putcards(kids_s[[k.most]], k.least.stock) #@ Isto da os cards de k.least para k.most
+      extra <- getcards(kids_s[[k.least]], "stock") #@ Isto armazenara o estoque de k.least
+      k.extra <- min(length(k.most.stock) - lenght(k.least.stock), sum(extra)) #@ Isto compreendera se k.least possui cards o suficiente em estoque em troca pelo que quer
       if(length(k.most.stock) > 1){
-        k.most.stock <- sample(k.most.stock, length(k.least.stock) + k.extra, FALSE) #@ If k.least does not have enough cards, this step will remove excessive cards from k.most
+        k.most.stock <- sample(k.most.stock, length(k.least.stock) + k.extra, FALSE) #@ Se k.least nao possuir cards o suficiente, este passo removera cards em excesso de k.most
       }
       ex <- k.extra
       k.least.remove <- numeric(1)
-      while(ex > 0){ #This loop will remove cards from k.least's collection until enough has been given to k.most in exchange for their ones
+      while(ex > 0){ #Este loop removera cards da colecao de k.least ate que seja dado o suficiente para k.most em troca de seus cards.
         if(length(which(extra > 0)) > 1){
           k.least.remove <- sample(which(extra > 0), 1)
         }
@@ -354,10 +354,10 @@ setMethod(
         extra[k.east.remove] <- extra[k.least.remove] - 1
         ex <- ex - 1
       }
-      kids_s[[k.least]] <- putcards(kids_s[[k.least]], k.most.stock) #@ And finally, k.least will receive k.most's cards
+      kids_s[[k.least]] <- putcards(kids_s[[k.least]], k.most.stock) #@ Finalmente, k.least recebera os cards de k.most.
       kids_s[[k.most]] <- removecards(kids_s[[k.most]], k.most.stock)
     }
-    else{ #@ In this condition, k1 and k2 have the same amount of cards to trade
+    else{ #@ Nesta condicao, k1 e k2 tem a mesma quantidade de cards para trocar
       kids_s[[k1]] <- putcards(kids_s[[k1]], k2.stock)
       kids_s[[k2]] <- putcards(kids_s[[k2]], k1.stock)
       kids_s[[k1]] <- removecards(kids_s[[k1]], k1.stock)
@@ -379,18 +379,18 @@ setGeneric(
 )
 
 setMethod( 
-  f = "trade", #@ The 'trade' function will be the simulation's mechanism to generate the kids' encounters and trade between them
-  signature = "bi", #@ It works with the 'bi' class we created before
+  f = "trade", #@ A funcao 'trade' sera o mecanismo de simulacao para gerar os encontros e as trocas entre as criancas.
+  signature = "bi", #@ Ela funciona com a classe 'bi' que nos criamos anteriormente
   definition = function(kids_bu){
     if(length(kids_bu) > 1){
-      enc <- encounter(meet()) #@ Using the 'encounter' function with a 'meet' object
+      enc <- encounter(meet()) #@ Utilizando a funcao 'encounter' com um objeto 'meet'
       for(i in 1:nrow(enc@order)){
         k1 <- enc@order[1, i]
         k2 <- enc@order[2, i]
-        k1.stock <- stock(kids_bu, k1, k2) #@ Setting up
-        k2.stock <- stock(kids_bu, k2, k1) #@ the stock!
+        k1.stock <- stock(kids_bu, k1, k2) #@ Definindo 
+        k2.stock <- stock(kids_bu, k2, k1) #@ o estoque!
         
-        if(!length(k1.stock) == length(k2.stock)){ #@ Since this is the bilateral behaviour, there must always be equal trades
+        if(!length(k1.stock) == length(k2.stock)){ #@ Ja que este e o comportamento bilateral, devemos sempre ter trocas igualitarias
           k_min <- min(length(k1.stock), min(k2.stock))
           k1.stock <- sample(k1.stock, k_min, FALSE)
           k2.stock <- sample(k2.stock, k_min, FALSE)
@@ -410,8 +410,8 @@ setMethod(
 
 
 setMethod(
-  f = "trade", #@ Wait a second! There is another 'trade' function. Is that a mistake from the developer?
-  signature = "uni", #@ Nope! This one affects the 'uni' behaviour. Try to figure for yourself the differences :)
+  f = "trade", #@ Espere um segundo! Ha outra funcao 'trade'. Sera que isso foi um erro do desenvolvedor?
+  signature = "uni", #@ Negativo! Esta afeta a classe 'uni'. Tente entender as diferencas por conta propria :)
   definition = function(kids_bu){
     if(length(kids_bu) > 1){
       enc <- encounter(meet())
