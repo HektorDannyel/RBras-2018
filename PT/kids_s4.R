@@ -34,66 +34,66 @@
 
 
 
-# Without further ado, let's get started!
+# Sem mais delongas, vamos comecar!
 
 
-# Important! --------------------------------------------------------------
+# Importante! --------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------#
-# IMPORTANT!                                                                                                                #
+# IMPORTANTE!                                                                                                               #
 #                                                                                                                           #
-# In S3, values within objects are called using the 'dollar' symbol (object$value). S4 uses the 'at' symbol (object@value). #
+# Em S3, valores dentro de objetos sao chamados usando o cifrao (objeto$valor). S4 utiliza o arroba (objeto@valor)          #
 #                                                                                                                           #
 #---------------------------------------------------------------------------------------------------------------------------#
 
 
-# Setting classes and objects ---------------------------------------------------------
+# Definindo classes e objetos ---------------------------------------------------------
 
 
-# The first thing we need to set when working with OOP is the object classes we will be working with. In S4, the example below shows how to set a class.
+# A primeira coisa a ser definida quando trabalhamos com POO sao as classes dos objetos com que trabalharemos. O exemplo abaixo mostra como definir uma classe S4.
 
 kid <- setClass(
-  Class = "kid", #the class
+  Class = "kid", #A classe
 
-  slots = c( # Think of the slots as being the characteristics of the object. You must specify what those slots will hold (logical and numeric in this case) and name them.
-    album = "logical", #@ A logical vector of size n. Each position (1:n) represents the ID of a card. 
-    collection = "numeric" #@ A numeric vector of size n. Each position (1:n) represents the ID of a card.
+  slots = c( # Pense que os slots sao as caracteristicas do objeto. Voce deve especificar o que esses slots suportarao (um logico e um numerico neste caso) e nomea-los
+    album = "logical", #@ Um vetor logico de tamanho n. Cada posicao (1:n) representa o codigo de um card.
+    collection = "numeric" #@ Um vetor numerico de tamanho n. Cada posicao (1:n) representa o codigo de um card.
   ), 
 
-  prototype = list( # The prototype is the default value your slots will receive.
-    album = logical(10), #@ If album[1] == TRUE means the card of ID 1 exists within the album. If album[1] == FALSE, the kid does not have such card.
-    collection = numeric(10) #@ Each position counts the amount of extra cards of ID 1:n.
+  prototype = list( # O prototype e o valor padrao que seu slot vai receber.
+    album = logical(10), #@ Se album[1] == TRUE Significa que o card 1 existe dentro do album. Se album[1] == FALSE, a crianca nao tem dado card.
+    collection = numeric(10) #@ Cada posicao conta a quantidade de cartas repetidas de codigo 1:n
   ), 
 
-  validity = function(object){ # The validity function is not mandatory but it is recommended. It will save your objects from being defined with incorrect inputs.
+  validity = function(object){ # A funcao validity nao e obrigatoria mas e recomendada. Ela vai salvar os objetos de serem definidos com inputs incorretos.
     if(!is.logical(object@album)){
-      return("kid@album is not logical.") # Validates the 'album' input
+      return("kid@album is not logical.") # Valida o input 'album'
     }
     else if(!is.numeric(object@collection)){
-      return("kid@collection is not numeric.") # Validates the 'collection' input
+      return("kid@collection is not numeric.") # Valida o input 'collection'
     }
     else if(!length(object@album) == length(object@collection)){
-      return("Album and collection must be of same length.") # Makes sure 'album' and 'collection' have the same length
+      return("Album and collection must be of same length.") # Garante que 'album' e 'collection' tem o mesmo comprimento
     }
   }
 )
 
 
-kid() # This is an object of class 'kid'.
+kid() # Este e um objeto de classe 'kid'.
 
 
 #---
 
   
-# In S4, Inheritance is present in a much more elegant way than in S3. It determines that a newly created class will *inherit* all of the characteristics from the
-# previous class.
+# Em S4, Heranca esta presente de uma forma muito mais elegante do que em S3. Ela determinara que uma classe definida recentemente 'herda' as caracteristicas da classe
+# anterior.
 
 
 bi <- setClass(
   "bi",
 
-  contains = "kid" # 'contains' is the argument used to define from which class the newly setted will inherit the characteristics.
-) # 'bi' is the class that defines a *bilateral* behaviour.
+  contains = "kid" # 'contains' e o argumento utilizado para definid de qual classe o novo objeto herdara as caracteristicas.
+) # 'bi' e a classe que define um comportamento *bilateral*.
 
 
 
@@ -101,21 +101,21 @@ uni <- setClass(
   "uni",
 
   contains = "kid"
-) # 'uni' is the class that defines a *unilateral* behaviour.
+) # 'uni' e a classe que define um comportamento *unilateral*.
 
 
 #---
 
 
-# Although not explicitly necessary, create_universe will enhance our simulation by dinamically creating the universe in which we will be working.
-# It will create n kids with an album size of p and define the behaviour and gather them all in a list.
+# Mesmo que nao explicitamente necessario, create_universe vai melhorar nossa simulacao ao criar dinamicanete o universo em que estaremos trabalhando.
+# A funcao criara n criancas com um album de tamanho p, definira o comportamento de troca e agrupara todas em uma lista.
 
 create_universe <- function(kids_total = 10, album_size = 100, kid_class = "bi"){
   if(kid_class == "bi"){
     for(i in 1:kids_total){
-      assign(paste0("kid", i), # The name of the object
-             bi(album = logical(album_size), collection = numeric(album_size)), # Defining the class
-             envir = .GlobalEnv) # Assigning to the Global Environment
+      assign(paste0("kid", i), # O nome do objeto
+             bi(album = logical(album_size), collection = numeric(album_size)), # Definindo a classe
+             envir = .GlobalEnv) # Atribuindo ao Ambiente Global
     }
   }
   else if(kid_class == "uni"){
@@ -123,18 +123,18 @@ create_universe <- function(kids_total = 10, album_size = 100, kid_class = "bi")
       assign(paste0("kid", i), bi(album = logical(album_size), collection = numeric(album_size)), envir = .GlobalEnv)
     }
   }
-  assign("kids", eval(parse(text = paste0("list(", paste0("kid", 1:kids_total, collapse = ", "), ")"))), envir = .GlobalEnv) # Placing all generated kids in a list
-  assign("kid_class", c("kids", kid_class), envir = .GlobalEnv) # Assigning the classes to a character vector
-  assign("album_size", album_size, envir = .GlobalEnv) # Assigning the album size to a numeric vector
+  assign("kids", eval(parse(text = paste0("list(", paste0("kid", 1:kids_total, collapse = ", "), ")"))), envir = .GlobalEnv) # Alocando todas as criancas geradas em uma lista
+  assign("kid_class", c("kids", kid_class), envir = .GlobalEnv) # Atribuindo as classes a um vetor string
+  assign("album_size", album_size, envir = .GlobalEnv) # Atribuindo o tamanho do album a um vetor numerico
 }
 
 #---
 
 
-#@ Meet is an object that will define in which order the kids will meet, two at a time. Every kid at least tries to meet with another (they will not succeed if there
-#@ are no cards to be traded).
+#@ Meet e um objeto que definira qual a ordem de encontro das criancas, duas por vez. Todas as criancas ao menos tentam se encontrar com outra (elas nao terao sucesso
+#@ se nao ha cartas para serem trocadas).
 
-# Try to understand 'meet' on your own! You can use the class we defined earlier as a guide.
+# Tente compreender 'meet' sozinho! Voce pode usar a classe definida previamente como um guia.
 
 meet <- setClass(
   "meet",
@@ -158,15 +158,15 @@ meet <- setClass(
 )
 
 
-# Functions ---------------------------------------------------------------
+# Funcoes ---------------------------------------------------------------
 
 
-# Now that we defined our classes, it is time to put our functions to use.
-# When defining a function, the first thing to do is defining a generic function. It will understand the class of the objects we are using and will define the structure
-# for the methods.
+# Agora que definimos nossas classes, e hora de colcar as funcoes para um bom uso.
+# Quando definindo uma funcao, a primeira coisa a ser feita e definir uma funcao generica. Ela entendera qual a classe dos objetos utilizados e definira uma estrutura  
+# para os metodos.
 
 setGeneric(
-  name = "putcards", # Every function deserves a name!
+  name = "putcards", # Todas as funcoes merecem um nome!
   def = function(kids_p, cards_p){ # Here we define the structure our next functions will have. They *must* match the parameters.
     standardGeneric("putcards")
   }
