@@ -10,4 +10,6 @@ This project involves a practical example of S4 class methodology. It is destine
 
 You can find below the flow chart related to the simulation. Feel free to analyse it!
 
-![alt text]("~/Projects/RBras-2018/flow_chart.jpeg")
+![alt text][logo]
+
+[logo]: ("http://leg.ufpr.br/~hektor/flow_chart.jpeg")
